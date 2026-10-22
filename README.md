@@ -17,33 +17,29 @@ The lab simulates a real-world legacy-to-cloud migration. All database and strea
 
 ```mermaid
 graph TD
-    subgraph macOS Host (Apple Silicon)
-        Client[SQL*Plus / SQLcl]
+    subgraph Host [macOS Host - Apple Silicon]
+        Client[SQL Plus / SQLcl]
         Python[Python Migration Scripts]
     end
-
-    subgraph Docker Bridge: data-lab-net (172.19.0.0/16)
-        Oracle[(Oracle 19c\n172.19.0.2:1521)]
-        OB[(OceanBase CE\n172.19.0.3:2881)]
-        OMS[OceanBase OMS\n172.19.0.4:8089]
-        
+    
+    subgraph Docker [Docker Bridge Network: data-lab-net]
+        Oracle[(Oracle 19c<br>172.19.0.2:1521)]
+        OB[(OceanBase CE<br>172.19.0.3:2881)]
+        OMS[OceanBase OMS<br>172.19.0.4:8089]
         ZK[Zookeeper]
         Kafka[Kafka Broker]
-        Debezium[Debezium Connect\n(Oracle Source + JDBC Sink)]
+        Debezium[Debezium Connect<br>Oracle Source + JDBC Sink]
     end
-
+    
     Client -->|SQL| Oracle
     Client -->|SQL| OB
     Python -->|ROWID Extract| Oracle
     Python -->|Bulk Insert| OB
-
     Oracle -.->|LogMiner / Redo Logs| Debezium
     Debezium --> Kafka
     Kafka -->|JDBC Sink| OB
-
-    OMS -.->|Configured but bypassed in favor of Debezium| Oracle
+    OMS -.->|Bypassed| Oracle
 ```
-
 
 # 🚀 Quick Start
 
