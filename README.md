@@ -52,7 +52,7 @@ graph TD
 
 ## 2. Clone & Configure
 ```bash
-git clone https://github.com
+git clone https://github.com/froilan-sia/local-enterprise-data-lab.git
 cd local-enterprise-data-lab
 ```
 
