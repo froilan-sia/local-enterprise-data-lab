@@ -1,0 +1,22 @@
+{
+  "name": "oceanbase-sink-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
+    "tasks.max": "1",
+    "connection.url": "jdbc:mysql://oceanbase-ce:2881/target_db?useSSL=false&allowPublicKeyRetrieval=true",
+    "connection.username": "root@sys",
+    "connection.password": "aaAA11!!",
+    "schema.evolution": "basic",
+    "primary.key.mode": "record_key",
+    "table.name.format": "${topic}",
+    "insert.mode": "upsert",
+    "topics.regex": "oracle\\.C__CDCATUSER\\..*",
+    "transforms": "unwrap,rename",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.drop.tombstones": "true",
+    "transforms.rename.type": "org.apache.kafka.connect.transforms.RegexRouter",
+    "transforms.rename.regex": "oracle\\.C__CDCATUSER\\.(.*)",
+    "transforms.rename.replacement": "$1"
+  }
+}
+

@@ -1,0 +1,22 @@
+FROM quay.io/debezium/connect:2.4
+USER root
+
+# 1. Install Oracle OJDBC driver for the source connector
+RUN curl -fSL https://maven.org \
+    -o /kafka/connect/debezium-connector-oracle/ojdbc11.jar
+
+# 2. Download Confluent JDBC Sink Connector plugin dependencies
+ENV CONFLUENT_JDBC_DIR=$KAFKA_CONNECT_PLUGINS_DIR/confluent-jdbc
+RUN mkdir -p $CONFLUENT_JDBC_DIR && \
+    curl -fSL https://cloudfront.net \
+    -o /tmp/confluent-jdbc.zip && \
+    unzip /tmp/confluent-jdbc.zip -d /tmp/confluent-jdbc && \
+    mv /tmp/confluent-jdbc/confluentinc-kafka-connect-jdbc-10.7.6/lib/* $CONFLUENT_JDBC_DIR && \
+    rm -rf /tmp/confluent-jdbc /tmp/confluent-jdbc.zip
+
+# 3. Download MySQL JDBC driver (required for OceanBase compatibility)
+RUN curl -fSL https://maven.org \
+    -o $CONFLUENT_JDBC_DIR/mysql-connector-j-8.0.33.jar
+
+USER kafka
+
